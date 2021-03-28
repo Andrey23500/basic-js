@@ -1,13 +1,70 @@
 const CustomError = require("../extensions/custom-error");
 
 class VigenereCipheringMachine {
-  encrypt() {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
+  
+  constructor(mode = true) {
+    this.mode = mode;
+  }
+
+  encrypt(message,key) {
+    let a = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";   //Строка алфавита
+    let K=key;
+    if(!message||!key) throw Error();
+    K=K.toUpperCase();
+    message=message.toUpperCase();
+
+    while(message.length>K.length) {
+      K+=K;
+    }
+    K=K.substr(0,message.length);
+ 
+    let str='';
+    let j=0;
+    for(let i=0;i<message.length;i++) {
+      if(a.includes(message[i])){
+        let indexMessage=a.indexOf(message[i]);
+        let indexKey=a.indexOf(K[j]);
+        j++;
+       str+= a[(( indexMessage+indexKey )%26)]; 
+    }  
+      else str+=message[i];  
+    }
+
+    if ( this.mode) return str;
+    else return str.split("").reverse().join("");
   }    
-  decrypt() {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
+  
+  decrypt(message,key) {
+    if(!message||!key) throw Error();
+    let a = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";   //Строка алфавита
+    let K=key;
+    if(!message||!key) throw Error();
+    K=K.toUpperCase();
+    message=message.toUpperCase();
+
+    while(message.length>K.length) {
+      K+=K;
+    }
+    K=K.substr(0,message.length);
+
+
+    let str='';
+    let j=0;
+    for(let i=0;i<message.length;i++) {
+      if(a.includes(message[i])){
+        let indexMessage=a.indexOf(message[i]);
+        let indexKey=a.indexOf(K[j]);
+        j++;
+        let z=indexMessage-indexKey;
+        while(z<0) z=z+26;
+       str+= a[z]; 
+    }  
+      else str+=message[i];  
+    }
+
+    if ( this.mode) return str;
+    else return str.split("").reverse().join("");
+
   }
 }
 
